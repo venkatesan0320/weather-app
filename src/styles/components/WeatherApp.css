@@ -1,0 +1,144 @@
+.Weather-section .text-field .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    /* border-width: 1px; */
+    border-color: transparent;
+}
+
+.Weather-section .text-field fieldset {
+    border: transparent;
+
+}
+
+.Weather-section input {
+    caret-color: #000;
+}
+
+.Weather-section input {
+    color: #000;
+}
+
+.Weather-section input::-webkit-input-placeholder {
+    color: #000 !important;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 28px;
+
+}
+
+
+.Weather-section .text-field {
+    background-color: #ffffff5c;
+    border-radius: 20px;
+    /* width: 100%; */
+    max-width: 500px;
+    min-width: 400px;
+}
+
+.Weather-section .temprature {
+    font-size: 3rem;
+    font-family: "Titillium Web", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #ffffffc9;
+    position: relative;
+    line-height: 48px;
+}
+
+.Weather-section .temprature .degree {
+    font-size: 2.2rem;
+    font-family: "Titillium Web", sans-serif;
+    font-weight: 400;
+    position: relative;
+    bottom: 6px;
+    left: 1px;
+}
+
+.Weather-section .temprature .celcius {
+    position: relative;
+    bottom: 0px;
+    left: -18px;
+    font-size: 2rem;
+    font-family: 'circular';
+    font-weight: 400;
+    opacity: 0.5;
+
+}
+
+.Weather-section .location {
+    font-size: 0.8rem;
+    font-family: "Titillium Web", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #ffffffc9;
+}
+
+.Weather-section .wind {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+
+.Weather-section .wind:first-child {
+    padding-bottom: 10px;
+    border-bottom: 0.5px solid #ffffffc9;
+}
+
+.Weather-section .wind-title {
+    font-size: 0.8rem;
+    font-family: "Titillium Web", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #ffffffc9;
+}
+
+.Weather-section .wind-content {
+    font-size: 0.8rem;
+    font-family: "Titillium Web", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    color: #ffffffc9;
+}
+
+@media screen and (max-width:600px) {
+    .Weather-section .text-field {
+        max-width: unset;
+        min-width: unset;
+        width: 100%;
+
+    }
+
+    .Weather-section .temprature {
+        font-size: 5rem;
+        font-weight: 600;
+        font-style: normal;
+        color: #ffffffc9;
+        position: relative;
+        line-height: 70px;
+    }
+
+    .Weather-section .temprature .degree {
+        font-size: 3rem;
+        font-weight: 400;
+        position: relative;
+        bottom: 20px;
+        left: 0;
+    }
+
+    .Weather-section .temprature .celcius {
+        position: relative;
+        bottom: 4px;
+        left: -25px;
+        font-size: 2.4rem;
+        font-weight: 400;
+        opacity: 0.5;
+    }
+
+    .Weather-section .location {
+        font-size: 1rem;
+        font-weight: 600;
+        padding-bottom: 15px;
+
+
+    }
+}
