@@ -17,8 +17,19 @@ export default function index() {
   const [fetch, setFetch] = useState(false);
   const [data, setData] = useState();
   const [city, setCity] = useState("");
-  console.log(data);
+  // console.log(data);
   console.log(router);
+  console.log(city, "citys");
+
+  
+  useEffect(() => {
+    // Update the city state when the query changes in the router
+    const { q } = router.query;
+    if (q) {
+      setCity(q);
+      setFetch(true);
+    }
+  }, [router.query]);
 
   const handleChange = (event) => {
     setCity(event.target.value);
@@ -33,9 +44,8 @@ export default function index() {
       handleClick();
       router.push({
         pathname: "/",
-        query: { q: city }
+        query: { q: city },
       });
-      
     }
   };
   useEffect(() => {
@@ -87,8 +97,7 @@ export default function index() {
             >
               <TextField
                 onChange={handleChange}
-                // onKeyPress={handleKeyPress}
-
+                value={city}
                 onKeyDown={handleKeyPress}
                 placeholder="Search City"
                 InputProps={{
