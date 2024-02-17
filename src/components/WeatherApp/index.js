@@ -8,15 +8,17 @@ import {
   Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-
+import { useRouter } from "next/router";
 
 const backgroundImage = ["/weather-img.jpg"];
 
 export default function index() {
+  const router = useRouter();
   const [fetch, setFetch] = useState(false);
   const [data, setData] = useState();
   const [city, setCity] = useState("");
   console.log(data);
+  console.log(router);
 
   const handleChange = (event) => {
     setCity(event.target.value);
@@ -29,6 +31,11 @@ export default function index() {
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       handleClick();
+      router.push({
+        pathname: "/",
+        query: { q: city }
+      });
+      
     }
   };
   useEffect(() => {
@@ -81,7 +88,7 @@ export default function index() {
               <TextField
                 onChange={handleChange}
                 // onKeyPress={handleKeyPress}
-         
+
                 onKeyDown={handleKeyPress}
                 placeholder="Search City"
                 InputProps={{
