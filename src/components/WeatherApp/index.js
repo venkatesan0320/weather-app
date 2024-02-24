@@ -10,62 +10,90 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import { useRouter } from "next/router";
 
+import Location from "@/components/Location/index";
 const backgroundImage = ["/weather-img.jpg"];
 
-export default function index() {
+export default function index({ cityLocation, getLocation }) {
+
   const router = useRouter();
   const [fetch, setFetch] = useState(false);
-  const [data, setData] = useState();
+  const [weather, setWeather] = useState();
   const [city, setCity] = useState("");
-  // console.log(data);
-  console.log(router);
-  console.log(city, "citys");
+
+ 
+console.log(weather,"weather");
+
 
   
+
+
   useEffect(() => {
     // Update the city state when the query changes in the router
-    const { q } = router.query;
+    const { q } = router?.query;
     if (q) {
       setCity(q);
       setFetch(true);
+ 
+
     }
-  }, [router.query]);
+  }, [router?.query]);
 
   const handleChange = (event) => {
     setCity(event.target.value);
     setFetch(false);
+
   };
 
   const handleClick = () => {
     setFetch(true);
+
   };
+
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       handleClick();
-      router.push({
-        pathname: "/",
-        query: { q: city },
-      });
+
+      if (city === "") {
+        console.log("clear");
+        router.push("/");
+      } else {
+        console.log("value");
+        router.push({
+          pathname: "/",
+          query: { q: city },
+        });
+      }
     }
   };
+
   useEffect(() => {
     const fetchData = async () => {
       if (!fetch) return; // Return early if fetch is false
       const url = `https://api.tomorrow.io/v4/weather/realtime?location=${city}&apikey=${process.env.NEXT_PUBLIC_ACCESS_KEY}`;
+
       try {
         const response = await axios.get(url);
-        setData(response?.data);
+        setWeather(response?.data);
+
       } catch (error) {
+        setWeather("please try again later");
         console.error("Failed to fetch data", error);
       }
     };
 
     fetchData();
   }, [fetch]); // Run only when fetch changes
-  const date = new Date(data?.data?.time);
+
+
+
+
+
+
+
+  const date = new Date(weather?.data?.time);
   const options = { timeZone: "Asia/Kolkata" };
   const formattedDate = date?.toLocaleString("en-US", options);
-  const cityName = data?.location?.name;
+  const cityName = weather?.location?.name;
   // const cityName = cityName ? cityName.split(",")[0] : "";
 
   return (
@@ -102,15 +130,14 @@ export default function index() {
                 placeholder="Search City"
                 InputProps={{
                   endAdornment: (
-                    <IconButton onClick={handleClick}>
-                      <SearchIcon color="action" />
-                    </IconButton>
+                    <IconButton onClick={getLocation}>📍</IconButton>
                   ),
                 }}
                 className="text-field"
                 autoComplete="off"
               />
-              {data && (
+
+              {weather?.data && (
                 <Box
                   component={"div"}
                   sx={{
@@ -128,34 +155,68 @@ export default function index() {
                     minWidth: { xs: "unset", sm: "400px" },
                   }}
                 >
-                  {cityName && (
-                    <Typography className="location">{cityName}</Typography>
-                  )}
-                  {data?.data?.values?.temperature && (
+                  <Typography className="current-weather-title">
+                    Current weather
+                  </Typography>
+                  <Typography className="location">{cityName}</Typography>
+
+                  <Box component={"div"} className="temprature-box">
                     <Typography className="temprature">
-                      {data?.data?.values?.temperature}
+                      {weather?.data?.values?.temperature}
                       <span className="degree">°</span>
                       <span className="celcius">c</span>
                     </Typography>
-                  )}
 
-                  {data?.data?.values?.windSpeed && (
-                    <Box className="wind">
-                      <Typography className="wind-title">Wind</Typography>
-                      <Typography className="wind-content">
-                        {data?.data?.values?.windSpeed} km/h
+                    <Box className="feels-temprature">
+                      <Typography className="feelslike-title">
+                        Feels like
+                      </Typography>
+                      <Typography className="feelslike-content">
+                        {weather?.data?.values?.temperatureApparent}
+                        <span>°</span>
                       </Typography>
                     </Box>
-                  )}
+                  </Box>
 
-                  {data?.data?.values?.windGust && (
-                    <Box className="wind">
-                      <Typography className="wind-title">Wind Gust</Typography>{" "}
-                      <Typography className="wind-content">
-                        {data?.data?.values?.windGust} km/h
-                      </Typography>
-                    </Box>
-                  )}
+                  <Box className="wind">
+                    <Typography className="wind-title">Wind</Typography>
+                    <Typography className="wind-content">
+                      {weather?.data?.values?.windSpeed} km/h
+                    </Typography>
+                  </Box>
+
+                  <Box className="wind">
+                    <Typography className="wind-title">Wind Gust</Typography>
+                    <Typography className="wind-content">
+                      {weather?.data?.values?.windGust} km/h
+                    </Typography>
+                  </Box>
+
+                  <Box className="wind">
+                    <Typography className="wind-title">UV index</Typography>
+                    <Typography className="wind-content">
+                      {weather?.data?.values?.uvIndex}
+                    </Typography>
+                  </Box>
+
+                  <Box className="wind">
+                    <Typography className="wind-title">Visibility</Typography>
+                    <Typography className="wind-content">
+                      {weather?.data?.values?.visibility} km
+                    </Typography>
+                  </Box>
+                  <Box className="wind">
+                    <Typography className="wind-title">Humidity</Typography>
+                    <Typography className="wind-content">
+                      {weather?.data?.values?.humidity}%
+                    </Typography>
+                  </Box>
+                  <Box className="wind">
+                    <Typography className="wind-title">Pressure</Typography>
+                    <Typography className="wind-content">
+                      {weather?.data?.values?.pressureSurfaceLevel} mb
+                    </Typography>
+                  </Box>
                 </Box>
               )}
             </Box>

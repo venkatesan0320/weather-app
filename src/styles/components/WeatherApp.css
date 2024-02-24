@@ -33,6 +33,20 @@
     max-width: 500px;
     min-width: 400px;
 }
+.Weather-section .current-weather-title{
+    font-size: 1.8rem;
+    font-family: "Titillium Web", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    color: #ffffffc9;
+    line-height: 48px;
+}
+.Weather-section .temprature-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
 
 .Weather-section .temprature {
     font-size: 3rem;
@@ -63,7 +77,27 @@
     opacity: 0.5;
 
 }
-
+.Weather-section .feels-temprature{
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: baseline;
+}
+.Weather-section .feelslike-title{
+    font-size: 0.8rem;
+    font-family: "Titillium Web", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #ffffffc9;
+    /* line-height: 30px; */
+}
+.Weather-section .feelslike-content{
+    font-size: 1rem;
+    font-family: "Titillium Web", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    color: #ffffffc9;
+}
 .Weather-section .location {
     font-size: 0.8rem;
     font-family: "Titillium Web", sans-serif;
