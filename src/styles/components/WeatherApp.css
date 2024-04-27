@@ -1,6 +1,31 @@
+.Weather-section::before {
+    content: "";
+    position: absolute;
+    top: 0 !important;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgb(6 11 67 / 37%) 27.02%, rgba(6, 11, 67, .3));
+    width: 100%;
+}
+
 .Weather-section .text-field .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
     /* border-width: 1px; */
     border-color: transparent;
+}
+
+.Weather-section .current-weather-box {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.Weather-section .all-dates {
+    font-size: 0.8rem;
+    font-family: "Titillium Web", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #ffffffc9;
 }
 
 .Weather-section .text-field fieldset {
@@ -33,7 +58,8 @@
     max-width: 500px;
     min-width: 400px;
 }
-.Weather-section .current-weather-title{
+
+.Weather-section .current-weather-title {
     font-size: 1.8rem;
     font-family: "Titillium Web", sans-serif;
     font-weight: 600;
@@ -41,6 +67,7 @@
     color: #ffffffc9;
     line-height: 48px;
 }
+
 .Weather-section .temprature-box {
     display: flex;
     flex-direction: row;
@@ -77,13 +104,15 @@
     opacity: 0.5;
 
 }
-.Weather-section .feels-temprature{
+
+.Weather-section .feels-temprature {
     display: flex;
     flex-direction: row;
     gap: 8px;
     align-items: baseline;
 }
-.Weather-section .feelslike-title{
+
+.Weather-section .feelslike-title {
     font-size: 0.8rem;
     font-family: "Titillium Web", sans-serif;
     font-weight: 400;
@@ -91,13 +120,15 @@
     color: #ffffffc9;
     /* line-height: 30px; */
 }
-.Weather-section .feelslike-content{
+
+.Weather-section .feelslike-content {
     font-size: 1rem;
     font-family: "Titillium Web", sans-serif;
     font-weight: 600;
     font-style: normal;
     color: #ffffffc9;
 }
+
 .Weather-section .location {
     font-size: 0.8rem;
     font-family: "Titillium Web", sans-serif;
@@ -175,4 +206,25 @@
 
 
     }
+}
+
+@keyframes wave {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(3);
+        opacity: 0;
+    }
+}
+
+.wave-animation {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.7);
+    animation: wave 0.5s linear;
 }

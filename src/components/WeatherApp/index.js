@@ -7,94 +7,181 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import MicIcon from "@mui/icons-material/Mic";
 import { useRouter } from "next/router";
 
-import Location from "@/components/Location/index";
 const backgroundImage = ["/weather-img.jpg"];
 
 export default function index({ cityLocation, getLocation }) {
-
   const router = useRouter();
   const [fetch, setFetch] = useState(false);
   const [weather, setWeather] = useState();
   const [city, setCity] = useState("");
-
- 
-console.log(weather,"weather");
-
-
-  
-
+  const [Dates, setDate] = useState();
+  const [showWave, setShowWave] = useState(false);
 
   useEffect(() => {
-    // Update the city state when the query changes in the router
     const { q } = router?.query;
     if (q) {
       setCity(q);
       setFetch(true);
- 
-
     }
   }, [router?.query]);
 
-  const handleChange = (event) => {
-    setCity(event.target.value);
-    setFetch(false);
-
-  };
-
-  const handleClick = () => {
-    setFetch(true);
-
-  };
-
-  const handleKeyPress = (event) => {
-    if (event.key === "Enter") {
-      handleClick();
-
-      if (city === "") {
-        console.log("clear");
-        router.push("/");
-      } else {
-        console.log("value");
-        router.push({
-          pathname: "/",
-          query: { q: city },
-        });
-      }
-    }
-  };
-
   useEffect(() => {
     const fetchData = async () => {
-      if (!fetch) return; // Return early if fetch is false
+      if (!fetch) return;
       const url = `https://api.tomorrow.io/v4/weather/realtime?location=${city}&apikey=${process.env.NEXT_PUBLIC_ACCESS_KEY}`;
 
+      // Inside your fetch data function
       try {
         const response = await axios.get(url);
         setWeather(response?.data);
-
+        speakWeather(response?.data); // Speak the weather information
       } catch (error) {
-        setWeather("please try again later");
+        setWeather(null);
+        speak("Failed to fetch weather data. Please try again later.");
         console.error("Failed to fetch data", error);
       }
     };
 
     fetchData();
-  }, [fetch]); // Run only when fetch changes
+  }, [fetch]);
 
+  const handleChange = (event) => {
+    setCity(event.target.value);
+    setFetch(false);
+  };
 
+  const handleClick = () => {
+    setFetch(true);
+    if (city === "") {
+      console.log("clear");
+      router.push("/");
+    } else {
+      console.log("value");
+      router.push({
+        pathname: "/",
+        query: { q: city },
+      });
+    }
+  };
 
-
-
-
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleClick();
+    }
+  };
 
   const date = new Date(weather?.data?.time);
   const options = { timeZone: "Asia/Kolkata" };
   const formattedDate = date?.toLocaleString("en-US", options);
+
+  useEffect(() => {
+    if (formattedDate) {
+      const formattedDateTime = new Date(formattedDate);
+
+      const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+      const dayOfWeek = days[formattedDateTime.getDay()];
+
+      const day = formattedDateTime.getDate();
+      const months = [
+        "JAN",
+        "FEB",
+        "MAR",
+        "APR",
+        "MAY",
+        "JUN",
+        "JUL",
+        "AUG",
+        "SEP",
+        "OCT",
+        "NOV",
+        "DEC",
+      ];
+      const month = months[formattedDateTime.getMonth()];
+      const year = formattedDateTime.getFullYear();
+      let hours = formattedDateTime.getHours();
+      const minutes = formattedDateTime.getMinutes();
+      const seconds = formattedDateTime.getSeconds();
+      const ampm = hours >= 12 ? "PM" : "AM";
+
+      // Convert hours to 12-hour format
+      hours = hours % 12;
+      hours = hours ? hours : 12; // Handle midnight (0 hours)
+
+      setDate({ dayOfWeek, day, month, year, hours, minutes, seconds, ampm });
+    } else {
+      console.log("Invalid date format");
+    }
+  }, [formattedDate]);
+
   const cityName = weather?.location?.name;
   // const cityName = cityName ? cityName.split(",")[0] : "";
+  const handleMicIconClick = () => {
+    setShowWave(true);
+    handleLocationButtonClick();
+  };
+
+  const handleLocationButtonClick = async () => {
+    try {
+      const recognition = new window.webkitSpeechRecognition(); // for Chrome
+      // const recognition = new window.SpeechRecognition(); // for other browsers
+      recognition.lang = "en-US";
+      recognition.continuous = false; // Disable continuous listening
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setCity(transcript);
+        setFetch(true);
+        // speak(
+        //   `You asked for ${transcript}. Fetching weather data for ${transcript}`
+        // );
+      };
+
+      recognition.start();
+    } catch (error) {
+      console.error("Speech recognition not supported:", error);
+    }
+  };
+
+  const speak = (message) => {
+    const speech = new SpeechSynthesisUtterance(message);
+    speech.lang = "en-US";
+
+    // Find a female voice
+    const femaleVoice = window.speechSynthesis
+      .getVoices()
+      .find((voice) => voice.voiceURI.includes("Female"));
+
+    // If a female voice is found, set it
+    if (femaleVoice) {
+      speech.voice = femaleVoice;
+    }
+
+    window.speechSynthesis.speak(speech);
+  };
+
+  const speakWeather = (weatherData) => {
+    if (!weatherData) {
+      speak("Weather data is not available.");
+      return;
+    }
+
+    const city = weatherData?.location?.name;
+    const temperature = weatherData?.data?.values?.temperature;
+    const apparentTemperature = weatherData?.data?.values?.temperatureApparent;
+    const windSpeed = weatherData?.data?.values?.windSpeed;
+    const windGust = weatherData?.data?.values?.windGust;
+    const uvIndex = weatherData?.data?.values?.uvIndex;
+    const visibility = weatherData?.data?.values?.visibility;
+    const humidity = weatherData?.data?.values?.humidity;
+    const pressure = weatherData?.data?.values?.pressureSurfaceLevel;
+
+    const message = `Current weather in ${city}. Temperature is ${temperature} degrees Celsius. Feels like ${apparentTemperature} degrees Celsius. Wind speed is ${windSpeed} kilometers per hour. Wind gust is ${windGust} kilometers per hour. UV index is ${uvIndex}. Visibility is ${visibility} kilometers. Humidity is ${humidity} percent. Pressure is ${pressure} millibars.`;
+
+    speak(message);
+  };
 
   return (
     <Box
@@ -112,6 +199,7 @@ console.log(weather,"weather");
         alignItems: "center",
       }}
     >
+      {showWave && <div className="wave-animation" />}
       <Container maxWidth="xl" className="container">
         <Box component={"div"}>
           <Box component={"div"}>
@@ -130,8 +218,11 @@ console.log(weather,"weather");
                 placeholder="Search City"
                 InputProps={{
                   endAdornment: (
-                    <IconButton onClick={getLocation}>📍</IconButton>
+                    <IconButton onClick={handleMicIconClick}>
+                      <MicIcon />
+                    </IconButton>
                   ),
+                  list: "city-suggestions",
                 }}
                 className="text-field"
                 autoComplete="off"
@@ -155,9 +246,15 @@ console.log(weather,"weather");
                     minWidth: { xs: "unset", sm: "400px" },
                   }}
                 >
-                  <Typography className="current-weather-title">
-                    Current weather
-                  </Typography>
+                  <Box className="current-weather-box">
+                    <Typography className="current-weather-title">
+                      Current weather
+                    </Typography>
+                    <Typography className="all-dates">
+                      {Dates?.dayOfWeek}, {Dates?.month} {Dates?.day}
+                    </Typography>
+                  </Box>
+
                   <Typography className="location">{cityName}</Typography>
 
                   <Box component={"div"} className="temprature-box">

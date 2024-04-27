@@ -3,18 +3,10 @@
 const axios = require("axios");
 
 async function fetchWeatherData() {
-  const options = {
-    method: "GET",
-    url: "https://weatherapi-com.p.rapidapi.com/current.json",
-    params: { q: "53.1,-0.13" },
-    headers: {
-      "X-RapidAPI-Key": "513e1a1230msh6d9d78650b7e152p1a4448jsnd195a916cf97",
-      "X-RapidAPI-Host": "weatherapi-com.p.rapidapi.com",
-    },
-  };
+  const url = "https://weatherapi-com.p.rapidapi.com/current.json";
 
   try {
-    const response = await axios.request(options);
+    const response = await axios(url);
     return response?.data;
   } catch (error) {
     console.error(error);
